@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Global Currency Hub — تحويل ومقارنة العملات</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef2ef;--card:#fff;--ink:#14302b;--mute:#5d726d;--line:#d5dfdb;--acc:#0f766e;--acc2:#e3a008;--up:#15803d;--down:#b91c1c;--r:18px}
+:root[data-theme=dark]{--bg:#0d1a19;--card:#142524;--ink:#e6f1ee;--mute:#92aaa5;--line:#254240;--acc:#2dd4bf;--acc2:#fbbf24;--up:#4ade80;--down:#f87171}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.6 "IBM Plex Sans Arabic",Tahoma,sans-serif;transition:background .3s}
+.w{max-width:1040px;margin:auto;padding:0 16px}
+header{display:flex;align-items:center;justify-content:space-between;padding:14px 0}
+.logo{font-weight:700;font-size:1.15rem;display:flex;gap:8px;align-items:center}.logo i{width:28px;height:28px;border-radius:9px;background:linear-gradient(135deg,var(--acc),var(--acc2))}
+nav{display:flex;gap:16px;align-items:center}nav a{color:var(--mute);text-decoration:none}nav a:hover{color:var(--ink)}
+button,select,input{font:inherit;color:inherit}
+.ic{border:1px solid var(--line);background:var(--card);border-radius:12px;width:40px;height:40px;cursor:pointer}
+h1{font-size:clamp(1.6rem,5vw,2.6rem);line-height:1.25;margin:18px 0 6px;max-width:16em}
+.sub{color:var(--mute);margin:0 0 20px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:20px}
+.conv{display:grid;gap:12px;grid-template-columns:1fr}
+@media(min-width:760px){.conv{grid-template-columns:1.1fr 1.3fr auto 1.3fr}}
+label{font-size:.85rem;color:var(--mute);display:block;margin-bottom:4px}
+.f{width:100%;padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--bg)}
+.f:focus,button:focus-visible,a:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.sw{align-self:end;height:46px;width:46px;border-radius:50%;border:0;background:var(--acc);color:#fff;font-size:1.2rem;cursor:pointer;transition:transform .35s}
+.sw:hover{transform:rotate(180deg)}
+.pick{position:relative}.pick input{cursor:pointer}
+.dd{position:absolute;z-index:20;inset-inline:0;top:100%;margin-top:4px;background:var(--card);border:1px solid var(--line);border-radius:12px;max-height:260px;overflow:auto;box-shadow:0 10px 30px #0003}
+.dd[hidden]{display:none}.dd div{padding:8px 12px;cursor:pointer;display:flex;gap:8px}.dd div:hover,.dd .on{background:var(--bg)}
+.res{margin-top:18px;padding-top:16px;border-top:1px dashed var(--line)}
+.big{font-size:clamp(2rem,8vw,3.6rem);font-weight:700;line-height:1.15;direction:ltr;text-align:right;word-break:break-all;color:var(--acc)}
+.big small{font-size:.4em;color:var(--mute);font-weight:500}
+.meta{color:var(--mute);font-size:.9rem;display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:6px}
+.dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--mute);margin-inline-end:6px}
+.dot.ok{background:var(--up)}.dot.stale{background:var(--acc2)}.dot.off{background:var(--down)}
+.note{font-size:.82rem;color:var(--mute);margin-top:8px}
+section{margin-top:34px}h2{font-size:1.25rem;margin:0 0 12px}
+.chips{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.chip{border:1px solid var(--line);background:var(--card);border-radius:14px;padding:12px;cursor:pointer;text-align:start;transition:border-color .2s}
+.chip:hover{border-color:var(--acc)}.chip b{display:block;direction:ltr;text-align:right}
+.up{color:var(--up)}.down{color:var(--down)}.num{direction:ltr;unicode-bidi:isolate;text-align:right}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.tabs button{border:1px solid var(--line);background:none;border-radius:20px;padding:4px 14px;cursor:pointer}
+.tabs .on{background:var(--acc);color:#fff;border-color:var(--acc)}
+#chart{width:100%;height:240px;display:block;touch-action:none}
+.tt{font-size:.9rem;min-height:1.6em;direction:ltr;text-align:right;color:var(--mute)}
+.tools{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px}.tools .f{flex:1;min-width:140px}
+.tw{overflow-x:auto}table{width:100%;border-collapse:collapse;min-width:480px}
+th,td{padding:10px 8px;border-bottom:1px solid var(--line);text-align:start;white-space:nowrap}
+th{cursor:pointer;color:var(--mute);font-weight:500;user-select:none}
+.pg{display:flex;gap:10px;justify-content:center;align-items:center;margin-top:12px}.pg button{padding:6px 14px;border:1px solid var(--line);background:var(--card);border-radius:10px;cursor:pointer}.pg button:disabled{opacity:.4;cursor:default}
+.two{display:grid;gap:16px;grid-template-columns:1fr}@media(min-width:760px){.two{grid-template-columns:1fr 1fr}}
+.mv{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--line)}
+footer{margin:40px 0 30px;color:var(--mute);font-size:.85rem}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="w">
+<header>
+  <div class="logo"><i></i>Global Currency Hub</div>
+  <nav><a href="#top-list">الأكثر استخدامًا</a><a href="#chart-s">الرسم البياني</a><a href="#table-s">كل العملات</a>
+  <button class="ic" id="theme" aria-label="تبديل الوضع الداكن">◐</button></nav>
+</header>
+<main id="top">
+<h1>حوّل أي عملة إلى أي عملة، بأحدث أسعار الصرف المتاحة</h1>
+<p class="sub">الأسعار من البنك المركزي الأوروبي وتتحدث مرة واحدة في كل يوم عمل — وليست أسعارًا لحظية.</p>
+
+<div class="card">
+  <div class="conv">
+    <div><label for="amt">المبلغ</label><input id="amt" class="f" inputmode="decimal" value="100" autocomplete="off"></div>
+    <div class="pick"><label for="from">من</label><input id="from" class="f" autocomplete="off" aria-label="العملة الأساسية"><div class="dd" hidden></div></div>
+    <button class="sw" id="swap" aria-label="عكس اتجاه التحويل">⇄</button>
+    <div class="pick"><label for="to">إلى</label><input id="to" class="f" autocomplete="off" aria-label="العملة المستهدفة"><div class="dd" hidden></div></div>
+  </div>
+  <div class="res" aria-live="polite">
+    <div class="big" id="out">—</div>
+    <div class="meta"><span id="rate"></span><span id="upd"></span><span><i class="dot" id="dot"></i><span id="st">جارٍ التحميل…</span></span></div>
+  </div>
+  <p class="note" id="note"></p>
+</div>
+
+<section id="top-list"><h2>العملات الأكثر استخدامًا مقابل <span id="b1"></span></h2><div class="chips" id="chips"></div></section>
+
+<section id="chart-s"><h2>حركة السعر</h2><div class="card">
+  <div class="tabs" id="tabs"><button data-d="7">7 أيام</button><button data-d="30" class="on">شهر</button><button data-d="90">3 أشهر</button><button data-d="365">سنة</button></div>
+  <div class="tt" id="tt">&nbsp;</div><svg id="chart" role="img" aria-label="رسم بياني لسعر الصرف"></svg>
+  <p class="note">لا تتوفر بيانات 24 ساعة لأن المصدر يحدّث الأسعار يوميًا فقط، ولذلك لا نعرضها.</p>
+</div></section>
+
+<section><div class="two">
+  <div class="card"><h2>الأعلى ارتفاعًا</h2><div id="gain"></div></div>
+  <div class="card"><h2>الأكثر انخفاضًا</h2><div id="lose"></div></div>
+</div><p class="note" id="mvnote"></p></section>
+
+<section id="table-s"><h2>أسعار العملات مقابل <span id="b2"></span></h2><div class="card">
+  <div class="tools"><input id="q" class="f" placeholder="ابحث بالاسم أو الرمز…" aria-label="بحث"></div>
+  <div class="tw"><table><thead><tr><th data-k="name">العملة</th><th data-k="code">الرمز</th><th data-k="rate">السعر</th><th data-k="chg">التغير عن اليوم السابق</th></tr></thead><tbody id="tb"></tbody></table></div>
+  <div class="pg"><button id="pv">السابق</button><span id="pn"></span><button id="nx">التالي</button></div>
+</div></section>
+</main>
+<footer>المصدر: Frankfurter API (بيانات ECB). الأعلام مرتبطة برمز العملة وقد لا تمثل بلدًا واحدًا. للمعلومة فقط وليست نصيحة مالية.</footer>
+</div>
+
+<script>
+'use strict';
+const $ = s => document.querySelector(s);
+const POP = ['USD','EUR','GBP','JPY','CHF','CAD','AUD','CNY','TRY','INR'];
+const S = { cur:{}, base:null, rates:null, prev:null, date:null, fetchedAt:null, stale:false, online:navigator.onLine, sort:{k:'code',d:1}, page:0, days:30 };
+const num = (n,max=4) => new Intl.NumberFormat('en-US',{maximumFractionDigits:max}).format(n);
+const rd = n => n>=100?num(n,2):n>=1?num(n,4):num(n,6);
+const flag = c => c==='EUR'?'🇪🇺':String.fromCodePoint(...c.slice(0,2).split('').map(x=>127397+x.charCodeAt(0)));
+
+// ---- شبكة + تخزين محلي (يعمل عند انقطاع الإنترنت) ----
+async function get(url, key){
+  try{
+    const r = await fetch(url); if(!r.ok) throw 0;
+    const j = await r.json();
+    try{localStorage.setItem(key, JSON.stringify(j));}catch{}
+    return j;
+  }catch{
+    const old = localStorage.getItem(key);
+    if(old) return {...JSON.parse(old), stale:true};
+    throw new Error('no data');
+  }
+}
+function status(){
+  const d=$('#dot'), t=$('#st');
+  if(!S.rates){d.className='dot off';t.textContent='لا توجد بيانات';return}
+  if(!S.online||S.stale){d.className='dot stale';t.textContent=S.online?'تعذر التحديث — نعرض آخر أسعار محفوظة':'غير متصل — نعرض آخر أسعار محفوظة'}
+  else{d.className='dot ok';t.textContent='متصل — البيانات حديثة'}
+  const f=new Date(S.fetchedAt).toLocaleString('ar-EG',{dateStyle:'medium',timeStyle:'short'});
+  $('#upd').textContent=`أسعار يوم ${S.date} · آخر جلب ناجح: ${f}`;
+}
+
+// ---- تحميل العملات والأسعار ----
+async function loadRates(base){
+  const j = await get('/api/rates?base='+base,'rates_'+base);
+  const dates = Object.keys(j.data.rates).sort();
+  S.base=base; S.date=dates.at(-1); S.rates={...j.data.rates[S.date],[base]:1};
+  S.prev = dates.length>1 ? {...j.data.rates[dates.at(-2)],[base]:1} : null;
+  S.fetchedAt=j.fetchedAt; S.stale=!!j.stale; status(); render();
+}
+async function init(){
+  try{S.cur=(await get('/api/currencies','cur')).data}catch{$('#st').textContent='تعذر تحميل العملات';return}
+  const saved = JSON.parse(localStorage.getItem('pair')||'["USD","EGP"]');
+  $('#from').dataset.c=saved[0]; $('#to').dataset.c=saved[1]; setLabels();
+  await loadRates(saved[0]).catch(()=>status());
+  convert(); drawChart();
+}
+const label = c => `${flag(c)} ${c} — ${S.cur[c]||''}`;
+function setLabels(){for(const id of ['from','to'])$('#'+id).value=label($('#'+id).dataset.c)}
+
+// ---- المحول ----
+async function convert(){
+  const f=$('#from').dataset.c, t=$('#to').dataset.c;
+  localStorage.setItem('pair',JSON.stringify([f,t]));
+  if(S.base!==f) try{await loadRates(f)}catch{return status()}
+  const a=parseFloat($('#amt').value.replace(/,/g,'')); const rate=S.rates?.[t];
+  if(!(a>=0)||!rate){$('#out').textContent='—';$('#note').textContent=!(a>=0)?'أدخل مبلغًا صحيحًا.':'';return}
+  $('#note').textContent='';
+  $('#out').innerHTML=`${num(a,2)} ${f} = ${num(a*rate,rate<0.01?6:2)} <small>${t}</small>`;
+  $('#rate').textContent=`1 ${f} = ${rd(rate)} ${t}`;
+}
+$('#amt').addEventListener('input',convert);
+$('#swap').onclick=()=>{const f=$('#from'),t=$('#to');[f.dataset.c,t.dataset.c]=[t.dataset.c,f.dataset.c];setLabels();convert().then(drawChart)};
+
+// قائمة اختيار قابلة للبحث
+document.querySelectorAll('.pick').forEach(p=>{
+  const inp=p.querySelector('input'), dd=p.querySelector('.dd');
+  const show=q=>{q=q.trim().toLowerCase();dd.innerHTML='';
+    Object.entries(S.cur).filter(([c,n])=>!q||c.toLowerCase().includes(q)||n.toLowerCase().includes(q)).slice(0,60)
+      .forEach(([c])=>{const d=document.createElement('div');d.textContent=label(c);d.onmousedown=e=>{e.preventDefault();inp.dataset.c=c;inp.value=label(c);dd.hidden=true;convert().then(()=>{drawChart();render()})};dd.append(d)});
+    dd.hidden=!dd.children.length};
+  inp.onfocus=()=>{inp.select();show('')};
+  inp.oninput=()=>show(inp.value);
+  inp.onblur=()=>{dd.hidden=true;inp.value=label(inp.dataset.c)};
+});
+
+// ---- الأقسام: العملات الشائعة + الأعلى/الأدنى + الجدول ----
+const chg = c => S.prev&&S.prev[c]?(S.rates[c]/S.prev[c]-1)*100:null;
+const chgHtml = v => v==null?'—':`<span class="${v>=0?'up':'down'}">${v>=0?'▲':'▼'} ${Math.abs(v).toFixed(2)}%</span>`;
+function render(){
+  if(!S.rates)return;
+  $('#b1').textContent=$('#b2').textContent=S.base;
+  $('#chips').innerHTML=POP.filter(c=>c!==S.base&&S.rates[c]).map(c=>`<button class="chip" data-c="${c}"><span>${flag(c)} ${c}</span><b>${rd(S.rates[c])}</b></button>`).join('');
+  const mv=Object.keys(S.rates).filter(c=>c!==S.base&&chg(c)!=null).map(c=>[c,chg(c)]).sort((a,b)=>b[1]-a[1]);
+  const row=([c,v])=>`<div class="mv"><span>${flag(c)} ${c}</span>${chgHtml(v)}</div>`;
+  $('#gain').innerHTML=mv.slice(0,5).map(row).join('')||'—';
+  $('#lose').innerHTML=mv.slice(-5).reverse().map(row).join('')||'—';
+  $('#mvnote').textContent=S.prev?'التغير محسوب بين آخر يومَي عمل متاحين في المصدر.':'لا تتوفر بيانات مقارنة.';
+  table();
+}
+$('#chips').onclick=e=>{const c=e.target.closest('.chip')?.dataset.c;if(c){$('#to').dataset.c=c;setLabels();convert().then(drawChart);scrollTo({top:0})}};
+
+function table(){
+  const q=$('#q').value.trim().toLowerCase();
+  let rows=Object.keys(S.rates).filter(c=>c!==S.base).map(c=>({code:c,name:S.cur[c]||c,rate:S.rates[c],chg:chg(c)}))
+    .filter(r=>!q||r.code.toLowerCase().includes(q)||r.name.toLowerCase().includes(q));
+  const {k,d}=S.sort; rows.sort((a,b)=>((a[k]??-1e9)>(b[k]??-1e9)?1:-1)*d);
+  const per=15,pages=Math.max(1,Math.ceil(rows.length/per)); S.page=Math.min(S.page,pages-1);
+  $('#tb').innerHTML=rows.slice(S.page*per,(S.page+1)*per).map(r=>`<tr><td>${flag(r.code)} ${r.name}</td><td>${r.code}</td><td class="num">${rd(r.rate)}</td><td>${chgHtml(r.chg)}</td></tr>`).join('')||'<tr><td colspan="4">لا توجد نتائج.</td></tr>';
+  $('#pn').textContent=`${S.page+1} / ${pages}`;$('#pv').disabled=S.page===0;$('#nx').disabled=S.page>=pages-1;
+}
+$('#q').oninput=()=>{S.page=0;table()};
+$('#pv').onclick=()=>{S.page--;table()};$('#nx').onclick=()=>{S.page++;table()};
+document.querySelectorAll('th').forEach(th=>th.onclick=()=>{const k=th.dataset.k;S.sort={k,d:S.sort.k===k?-S.sort.d:1};table()});
+
+// ---- الرسم البياني (SVG بدون مكتبات؛ بيانات حقيقية فقط) ----
+async function drawChart(){
+  const f=$('#from').dataset.c,t=$('#to').dataset.c,svg=$('#chart');
+  if(f===t){svg.innerHTML='';$('#tt').textContent='اختر عملتين مختلفتين.';return}
+  let pts;
+  try{const j=await get(`/api/history?base=${f}&quote=${t}&days=${S.days}`,`h_${f}${t}${S.days}`);
+    pts=Object.entries(j.data.rates).map(([d,r])=>[d,r[t]]).sort((a,b)=>a[0]>b[0]?1:-1)}
+  catch{svg.innerHTML='';$('#tt').textContent='تعذر تحميل البيانات التاريخية.';return}
+  const W=700,H=240,P=8,v=pts.map(p=>p[1]),mn=Math.min(...v),mx=Math.max(...v),sp=(mx-mn)||1;
+  const X=i=>P+i*(W-2*P)/Math.max(1,pts.length-1),Y=y=>H-P-((y-mn)/sp)*(H-2*P);
+  const line=pts.map((p,i)=>`${i?'L':'M'}${X(i).toFixed(1)},${Y(p[1]).toFixed(1)}`).join('');
+  svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
+  svg.innerHTML=`<path d="${line}L${X(pts.length-1)},${H}L${X(0)},${H}Z" fill="var(--acc)" opacity=".12"/><path d="${line}" fill="none" stroke="var(--acc)" stroke-width="2.5" stroke-linejoin="round"/><g id="cur" opacity="0"><line y1="0" y2="${H}" stroke="var(--mute)" stroke-dasharray="4"/><circle r="5" fill="var(--acc2)"/></g>`;
+  $('#tt').textContent=`1 ${f} → ${t}: من ${rd(v[0])} إلى ${rd(v.at(-1))} (${pts[0][0]} → ${pts.at(-1)[0]})`;
+  const move=e=>{const b=svg.getBoundingClientRect(),x=(e.clientX-b.left)/b.width*W;
+    const i=Math.max(0,Math.min(pts.length-1,Math.round((x-P)/(W-2*P)*(pts.length-1))));
+    const g=svg.querySelector('#cur');g.setAttribute('opacity',1);g.setAttribute('transform',`translate(${X(i)},0)`);
+    g.querySelector('circle').setAttribute('cy',Y(pts[i][1]));g.querySelector('line').setAttribute('x1',0);g.querySelector('line').setAttribute('x2',0);
+    $('#tt').textContent=`${pts[i][0]} — 1 ${f} = ${rd(pts[i][1])} ${t}`};
+  svg.onpointermove=move;svg.onpointerdown=move;
+}
+$('#tabs').onclick=e=>{const b=e.target.closest('button');if(!b)return;
+  document.querySelectorAll('#tabs button').forEach(x=>x.classList.toggle('on',x===b));S.days=+b.dataset.d;drawChart()};
+
+// ---- الوضع الداكن/الفاتح + حالة الاتصال + تحديث تلقائي ----
+const root=document.documentElement;
+root.dataset.theme=localStorage.getItem('theme')||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');
+$('#theme').onclick=()=>{root.dataset.theme=root.dataset.theme==='dark'?'light':'dark';localStorage.setItem('theme',root.dataset.theme)};
+addEventListener('online',()=>{S.online=true;refresh()});addEventListener('offline',()=>{S.online=false;status()});
+const refresh=()=>loadRates(S.base).then(convert).catch(status);
+setInterval(()=>{if(document.visibilityState==='visible'&&S.online)refresh()},30*60e3); // كل 30 دقيقة فقط، والمصدر يتغير يوميًا
+init();
+</script>
+</body>
+</html>
